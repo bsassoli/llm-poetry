@@ -57,7 +57,8 @@ def parse_all_poems(poems: NestedList) -> list[dict]:
 
 
 def add_author(first_name: str, last_name: str, poem: dict):
-    poem["author"] = {"first_name": first_name, "last_name": last_name}
+    poem["first_name"] = first_name
+    poem["last_name"] = last_name
     return poem
 
 

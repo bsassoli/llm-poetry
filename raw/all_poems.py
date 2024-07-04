@@ -1,5 +1,4 @@
 import json
-from functools import reduce
 from parse_poems import all_poems
 
 with open("poets.txt") as poets:
@@ -13,5 +12,9 @@ for poet in poets:
     list_of_poems = all_poems(filename, first_name, last_name)
     poems.append(list_of_poems)
 poems = [poem for list_of_poems in poems for poem in list_of_poems]
-poems = json.dumps(poems)
-print(poems)
+for ix, poem in enumerate(poems):
+    poem["id"] = ix
+poems_to_dict = {"poems": poems}
+target_file = "poems.json"
+with open(target_file, "w") as poems_file:
+    json.dump(poems_to_dict, poems_file)
