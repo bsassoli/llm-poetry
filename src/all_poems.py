@@ -1,5 +1,5 @@
 import json
-from parse_poems import all_poems
+from get_poems import get_all_poems
 
 with open("poets.txt") as poets:
     poets = poets.read().splitlines()

@@ -5,7 +5,7 @@ Returns:
     List: A list of poems in dict form with keys\
     {title, text, author: first_name, last_name}
 """
-
+# !todo rewrite initial docstring
 import argparse
 from typing import List
 
@@ -32,8 +32,7 @@ def data_to_poems(data: str, sep: str) -> NestedList:
     """
     poems = data.split(sep)
     split_poems = [poem.split("\n") for poem in poems]
-    clean_poems = [[verse for verse in poem if verse != ""]
-                   for poem in split_poems]
+    clean_poems = [[verse for verse in poem if verse != ""] for poem in split_poems]
     return clean_poems
 
 
@@ -57,18 +56,26 @@ def parse_all_poems(poems: NestedList) -> list[dict]:
 
 
 def add_author(first_name: str, last_name: str, poem: dict):
+    """Adds author field to poems"""
     poem["first_name"] = first_name
     poem["last_name"] = last_name
     return poem
 
 
 def add_author_to_all_poems(first_name, last_name, poems):
-    poems = list(map(lambda poem: add_author(first_name, last_name, poem),
-                     poems))
+    """Adds author to all poems in list. Poems must be in dict format"""
+    poems = list(map(lambda poem: add_author(first_name, last_name, poem), poems))
     return poems
 
 
+# todo Remove this function
 def parse_args():
+    #! This should be removed just here for testing
+    """AI is creating summary for parse_args
+
+    Returns:
+        [type]: [description]
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument("first_name")
     parser.add_argument("last_name")
@@ -77,7 +84,19 @@ def parse_args():
     return args
 
 
-def all_poems(filename, first_name, last_name):
+def get_all_poems(filename, first_name, last_name):
+    """all_poems Given a filename and an author,
+        return a list of poems in dict format.
+
+    Args:
+        filename (string): the file to process. The file must contain\
+        poems separated by "***".
+        first_name (string): the poet's first name
+        last_name (string): the poet's last name
+
+    Returns:
+       poems (List(dict)): a list of poems in dict format
+    """
     data = file_to_data(filename)
     poems = data_to_poems(data, sep="***")
     poems = parse_all_poems(poems)
@@ -87,5 +106,7 @@ def all_poems(filename, first_name, last_name):
 
 
 if __name__ == "__main__":
+    # todo Refactor this
+    # * args to main will be passed by other module not CLI
     args = parse_args()
     print(all_poems(args.filename, args.first_name, args.last_name))
