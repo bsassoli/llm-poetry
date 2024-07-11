@@ -5,8 +5,7 @@ Returns:
     List: A list of poems in dict form with keys\
     {title, text, author: first_name, last_name}
 """
-# !todo rewrite initial docstring
-import argparse
+
 from typing import List
 
 NestedList = List[List[str]]
@@ -68,22 +67,6 @@ def add_author_to_all_poems(first_name, last_name, poems):
     return poems
 
 
-# todo Remove this function
-def parse_args():
-    #! This should be removed just here for testing
-    """AI is creating summary for parse_args
-
-    Returns:
-        [type]: [description]
-    """
-    parser = argparse.ArgumentParser()
-    parser.add_argument("first_name")
-    parser.add_argument("last_name")
-    parser.add_argument("filename")
-    args = parser.parse_args()
-    return args
-
-
 def get_all_poems(filename, first_name, last_name):
     """all_poems Given a filename and an author,
         return a list of poems in dict format.
@@ -103,10 +86,3 @@ def get_all_poems(filename, first_name, last_name):
     poems = add_author_to_all_poems(first_name, last_name, poems)
 
     return poems
-
-
-if __name__ == "__main__":
-    # todo Refactor this
-    # * args to main will be passed by other module not CLI
-    args = parse_args()
-    print(all_poems(args.filename, args.first_name, args.last_name))
