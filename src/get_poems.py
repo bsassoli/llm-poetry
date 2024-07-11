@@ -91,7 +91,7 @@ def get_all_poems(dirname: str, filename: str) -> List[Dict]:
     name, data = file_to_data(dirname, filename)
     raw_poems = data_to_poems(data, sep="***")
     parsed_poems = parse_all_poems(raw_poems)
-    first_name, last_name = name.split(", ")
+    last_name, first_name = name.split(", ")
     poems = add_author_to_all_poems(first_name, last_name, parsed_poems)
 
     return poems
