@@ -17,7 +17,11 @@ def file_to_data(dirname: str, filename: str) -> tuple[str, str]:
         Returns a tuple (name, poems)"""
     with open(dirname + "/" + filename) as raw_poems:
         data = raw_poems.read()
-    return data[0], data[1:]
+        data = data.split("\n")
+        name = data[0]
+        poems = "\n".join(data[1:])
+
+    return (name, poems)
 
 
 def data_to_poems(data: str, sep: str) -> NestedList:
@@ -93,8 +97,8 @@ def get_all_poems(dirname, filename):
 
 def get_all_poems_from_files(dirpath: str) -> list[dict]:
     """Returns a list of dicts for consumption by main"""
-    poems = [get_all_poems(dirpath, filename) for filename
-             in os.listdir(dirpath)]
+    poems = [poem for filename in os.listdir(dirpath) for
+             poem in get_all_poems(dirpath, filename)]
     return poems
 
 
@@ -105,7 +109,7 @@ def main():
     for idx, poem in enumerate(poems):
         poem["id"] = idx
     poems_to_dict = {"poems": poems}
-    print(len(poems_to_dict["poems"]))
+    print(f"Success. Wrote {len(poems_to_dict["poems"])} poems.")
     target_file = "out/poems.json"
     with open(target_file, "w") as poems_file:
         json.dump(poems_to_dict, poems_file)
