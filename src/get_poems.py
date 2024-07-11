@@ -54,7 +54,7 @@ def parse_all_poems(poems: NestedList) -> List[Dict]:
             {"title": title, "text": text of poem}
     """
     titles = [poem[0] for poem in poems]
-    texts = ("\n").join([poem[1:] for poem in poems])
+    texts = ["\n".join(poem[1:]) for poem in poems]
     parsed_poems = [
         {"title": title, "text": text} for title, text in zip(titles, texts)
     ]
