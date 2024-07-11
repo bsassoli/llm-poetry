@@ -5,17 +5,19 @@ Returns:
     List: A list of poems in dict form with keys\
     {title, text, author: first_name, last_name}
 """
-
+import json
+import os
 from typing import List
 
 NestedList = List[List[str]]
 
 
-def file_to_data(filename: str) -> str:
-    """Opens a file containing poems and returns it as a string"""
+def file_to_data(filename: str) -> tuple[str, str]:
+    """Opens a file containing a name and poems.
+        Returns a tuple (name, poems)"""
     with open(filename) as raw_poems:
         data = raw_poems.read()
-    return data
+    return data[0], data[1:]
 
 
 def data_to_poems(data: str, sep: str) -> NestedList:
@@ -31,7 +33,8 @@ def data_to_poems(data: str, sep: str) -> NestedList:
     """
     poems = data.split(sep)
     split_poems = [poem.split("\n") for poem in poems]
-    clean_poems = [[verse for verse in poem if verse != ""] for poem in split_poems]
+    clean_poems = [[verse for verse in poem if verse != ""] for poem
+                   in split_poems]
     return clean_poems
 
 
@@ -63,26 +66,49 @@ def add_author(first_name: str, last_name: str, poem: dict):
 
 def add_author_to_all_poems(first_name, last_name, poems):
     """Adds author to all poems in list. Poems must be in dict format"""
-    poems = list(map(lambda poem: add_author(first_name, last_name, poem), poems))
+    poems = list(map(lambda poem: add_author(first_name, last_name, poem),
+                     poems))
     return poems
 
 
-def get_all_poems(filename, first_name, last_name):
-    """all_poems Given a filename and an author,
+def get_all_poems(filename):
+    """all_poems Given a filename,
         return a list of poems in dict format.
 
     Args:
         filename (string): the file to process. The file must contain\
         poems separated by "***".
-        first_name (string): the poet's first name
-        last_name (string): the poet's last name
 
     Returns:
        poems (List(dict)): a list of poems in dict format
     """
-    data = file_to_data(filename)
+    name, data = file_to_data(filename)
     poems = data_to_poems(data, sep="***")
     poems = parse_all_poems(poems)
+    first_name, last_name = name.split(", ")
     poems = add_author_to_all_poems(first_name, last_name, poems)
 
     return poems
+
+
+def get_all_poems_from_files(dirpath: str) -> list[dict]:
+    """Returns a list of dicts for consumption by main"""
+    poems = [get_all_poems(filename) for filename in os.listdir(dirpath)]
+    return poems
+
+
+def main():
+    """Navigates directory and writes json to out
+    """
+    poems = get_all_poems_from_files("texts")
+    for idx, poem in enumerate(poems):
+        poem["id"] = idx
+    poems_to_dict = {"poems": poems}
+    print(len(poems_to_dict["poems"]))
+    target_file = "out/poems.json"
+    with open(target_file, "w") as poems_file:
+        json.dump(poems_to_dict, poems_file)
+
+
+if __name__ == "__main__":
+    main()
