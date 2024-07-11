@@ -12,10 +12,10 @@ from typing import List
 NestedList = List[List[str]]
 
 
-def file_to_data(filename: str) -> tuple[str, str]:
+def file_to_data(dirname: str, filename: str) -> tuple[str, str]:
     """Opens a file containing a name and poems.
         Returns a tuple (name, poems)"""
-    with open(filename) as raw_poems:
+    with open(dirname + "/" + filename) as raw_poems:
         data = raw_poems.read()
     return data[0], data[1:]
 
@@ -71,7 +71,7 @@ def add_author_to_all_poems(first_name, last_name, poems):
     return poems
 
 
-def get_all_poems(filename):
+def get_all_poems(dirname, filename):
     """all_poems Given a filename,
         return a list of poems in dict format.
 
@@ -82,7 +82,7 @@ def get_all_poems(filename):
     Returns:
        poems (List(dict)): a list of poems in dict format
     """
-    name, data = file_to_data(filename)
+    name, data = file_to_data(dirname, filename)
     poems = data_to_poems(data, sep="***")
     poems = parse_all_poems(poems)
     first_name, last_name = name.split(", ")
@@ -93,7 +93,8 @@ def get_all_poems(filename):
 
 def get_all_poems_from_files(dirpath: str) -> list[dict]:
     """Returns a list of dicts for consumption by main"""
-    poems = [get_all_poems(filename) for filename in os.listdir(dirpath)]
+    poems = [get_all_poems(dirpath, filename) for filename
+             in os.listdir(dirpath)]
     return poems
 
 
