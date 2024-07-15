@@ -36,7 +36,7 @@ def data_to_poems(data: str, sep: str) -> NestedList:
         NestedList: A list of list
     """
     poems = data.split(sep)
-    split_poems = [poem.split("\n") for poem in poems]
+    split_poems = [poem.split("\n") for poem in poems if len(poem)]
     clean_poems = [[verse for verse in poem if verse != ""] for poem
                    in split_poems]
     return clean_poems
@@ -91,6 +91,7 @@ def get_all_poems(dirname: str, filename: str) -> List[Dict]:
     name, data = file_to_data(dirname, filename)
     raw_poems = data_to_poems(data, sep="***")
     parsed_poems = parse_all_poems(raw_poems)
+    print(name)
     last_name, first_name = name.split(", ")
     poems = add_author_to_all_poems(first_name, last_name, parsed_poems)
 
@@ -107,7 +108,7 @@ def get_all_poems_from_files(dirpath: str) -> list[Dict]:
 def main():
     """Navigates directory and writes json to out
     """
-    poems = get_all_poems_from_files("texts")
+    poems = get_all_poems_from_files("texts/poets")
     for idx, poem in enumerate(poems):
         poem["id"] = idx
     poems_to_dict = {"poems": poems}
